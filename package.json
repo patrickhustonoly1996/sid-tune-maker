@@ -1,7 +1,7 @@
 {
   "name": "diy-retro-banger",
   "version": "0.1.0",
-  "description": "DIY Retro Banger - Make 8-bit bangers",
+  "description": "DIY Retro Bangers - Make 8-bit bangers",
   "type": "module",
   "scripts": {
     "dev": "vite",
