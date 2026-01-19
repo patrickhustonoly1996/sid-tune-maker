@@ -7,21 +7,24 @@
    CSS Variables (Color Palette)
    -------------------------------------------------------------------------- */
 :root {
-  /* Colors - STRICT palette from design spec */
+  /* Colors - Hot fluorescent palette */
   --color-bg: #000000;
-  --color-primary: #FF00FF;     /* Hot magenta */
-  --color-secondary: #00FFFF;   /* Electric cyan */
+  --color-primary: #FF3300;     /* Neon red-orange */
+  --color-secondary: #FFFF00;   /* Electric yellow */
   --color-accent-1: #39FF14;    /* Neon green */
   --color-accent-2: #FF6600;    /* Laser orange */
+  --color-accent-3: #FF1493;    /* Hot pink */
+  --color-accent-4: #00FF66;    /* Mint green */
   --color-text: #FFFFFF;
   --color-grid: #1A1A1A;
   --color-grid-line: #333333;
 
   /* Glow effects */
-  --glow-primary: 0 0 10px #FF00FF, 0 0 20px #FF00FF;
-  --glow-secondary: 0 0 10px #00FFFF, 0 0 20px #00FFFF;
+  --glow-primary: 0 0 10px #FF3300, 0 0 20px #FF3300;
+  --glow-secondary: 0 0 10px #FFFF00, 0 0 20px #FFFF00;
   --glow-green: 0 0 10px #39FF14, 0 0 20px #39FF14;
   --glow-orange: 0 0 10px #FF6600, 0 0 20px #FF6600;
+  --glow-pink: 0 0 10px #FF1493, 0 0 20px #FF1493;
 
   /* Typography */
   --font-display: 'VT323', monospace;
@@ -36,7 +39,7 @@
   --space-5: 40px;
 
   /* Borders */
-  --border: 1px solid var(--color-secondary);
+  --border: 1px solid var(--color-accent-2);
   --border-primary: 1px solid var(--color-primary);
 }
 
@@ -133,17 +136,17 @@ body::after {
   font-size: 1.2rem;
   padding: var(--space-1) var(--space-2);
   background: transparent;
-  color: var(--color-secondary);
-  border: var(--border);
+  color: var(--color-accent-4);
+  border: 1px solid var(--color-accent-4);
   cursor: pointer;
   text-transform: uppercase;
   transition: none;
 }
 
 .btn:hover {
-  background: var(--color-secondary);
+  background: var(--color-accent-4);
   color: var(--color-bg);
-  box-shadow: var(--glow-secondary);
+  box-shadow: 0 0 10px #00FF66, 0 0 20px #00FF66;
 }
 
 .btn--primary {
@@ -186,7 +189,7 @@ body::after {
   gap: var(--space-1);
   font-family: var(--font-display);
   font-size: 1.2rem;
-  color: var(--color-secondary);
+  color: var(--color-accent-2);
 }
 
 .bpm-control input {
@@ -211,7 +214,7 @@ body::after {
    -------------------------------------------------------------------------- */
 .main {
   display: grid;
-  grid-template-columns: 180px 1fr;
+  grid-template-columns: 160px 1fr;
   overflow: hidden;
 }
 
@@ -220,63 +223,68 @@ body::after {
    -------------------------------------------------------------------------- */
 .library {
   border-right: var(--border);
-  padding: var(--space-2);
+  padding: var(--space-1);
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  overflow-y: auto;
+  gap: var(--space-1);
+  overflow: visible;
+  width: 160px;
 }
 
 .library__title {
   font-family: var(--font-display);
-  font-size: 1.5rem;
-  color: var(--color-primary);
+  font-size: 1.2rem;
+  color: var(--color-secondary);
+  text-shadow: var(--glow-secondary);
   text-align: center;
+  margin-bottom: 4px;
 }
 
 .library__categories {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
 }
 
 .library__cat {
   font-family: var(--font-display);
-  font-size: 1.1rem;
-  padding: var(--space-1);
+  font-size: 0.8rem;
+  padding: 4px 2px;
   background: transparent;
-  color: var(--color-secondary);
+  color: var(--color-accent-4);
   border: 1px solid var(--color-grid-line);
   cursor: pointer;
-  text-align: left;
+  text-align: center;
 }
 
 .library__cat:hover {
-  border-color: var(--color-secondary);
+  border-color: var(--color-accent-4);
 }
 
 .library__cat--active {
-  background: var(--color-secondary);
+  background: var(--color-accent-1);
   color: var(--color-bg);
-  border-color: var(--color-secondary);
+  border-color: var(--color-accent-1);
 }
 
 .library__sounds {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: 4px;
   flex: 1;
-  overflow-y: auto;
 }
 
 .sound-item {
   font-family: var(--font-body);
-  font-size: 0.9rem;
-  padding: var(--space-1);
+  font-size: 0.75rem;
+  padding: 6px 8px;
   background: var(--color-grid);
   color: var(--color-text);
   border: 1px solid var(--color-grid-line);
-  cursor: grab;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sound-item:hover {
@@ -284,8 +292,10 @@ body::after {
   box-shadow: var(--glow-primary);
 }
 
-.sound-item:active {
-  cursor: grabbing;
+.sound-item--selected {
+  border-color: var(--color-secondary);
+  background: var(--color-grid-line);
+  box-shadow: var(--glow-secondary);
 }
 
 /* --------------------------------------------------------------------------
@@ -311,7 +321,7 @@ body::after {
 .voice-label {
   font-family: var(--font-display);
   font-size: 1rem;
-  color: var(--color-secondary);
+  color: var(--color-accent-2);
   height: 48px;
   display: flex;
   align-items: center;
@@ -336,6 +346,7 @@ body::after {
 
 .beat-marker--bar {
   color: var(--color-secondary);
+  font-weight: bold;
 }
 
 .sequencer__grid {
@@ -380,7 +391,7 @@ body::after {
 }
 
 .grid-cell--bar {
-  border-right: 1px solid var(--color-secondary);
+  border-right: 1px solid var(--color-accent-2);
 }
 
 .sequencer__controls {
@@ -396,7 +407,7 @@ body::after {
   gap: var(--space-1);
   font-family: var(--font-display);
   font-size: 1rem;
-  color: var(--color-secondary);
+  color: var(--color-accent-4);
 }
 
 .loop-region input {
@@ -455,12 +466,14 @@ body::after {
 
 .wave-btn:hover {
   border-color: var(--color-secondary);
+  box-shadow: var(--glow-secondary);
 }
 
 .wave-btn--active {
   background: var(--color-secondary);
   color: var(--color-bg);
   border-color: var(--color-secondary);
+  box-shadow: var(--glow-secondary);
 }
 
 .pulse-width {
@@ -518,18 +531,20 @@ body::after {
   font-size: 0.75rem;
   padding: 4px 8px;
   background: transparent;
-  color: var(--color-secondary);
+  color: var(--color-accent-3);
   border: 1px solid var(--color-grid-line);
   cursor: pointer;
 }
 
 .filter-btn:hover {
-  border-color: var(--color-secondary);
+  border-color: var(--color-accent-3);
+  box-shadow: var(--glow-pink);
 }
 
 .filter-btn--active {
-  background: var(--color-secondary);
+  background: var(--color-accent-3);
   color: var(--color-bg);
+  box-shadow: var(--glow-pink);
 }
 
 .filter-params {
@@ -600,20 +615,20 @@ input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   width: 12px;
   height: 16px;
-  background: var(--color-secondary);
+  background: var(--color-accent-2);
   border: none;
   cursor: pointer;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
-  background: var(--color-primary);
-  box-shadow: var(--glow-primary);
+  background: var(--color-secondary);
+  box-shadow: var(--glow-secondary);
 }
 
 input[type="range"]::-moz-range-thumb {
   width: 12px;
   height: 16px;
-  background: var(--color-secondary);
+  background: var(--color-accent-2);
   border: none;
   cursor: pointer;
 }
@@ -647,8 +662,8 @@ input[type="range"]::-moz-range-thumb {
 .loading__logo {
   font-family: var(--font-pixel);
   font-size: 3rem;
-  color: var(--color-primary);
-  text-shadow: var(--glow-primary);
+  color: var(--color-secondary);
+  text-shadow: var(--glow-secondary);
   margin-bottom: var(--space-3);
   animation: pulse 1s infinite;
 }
@@ -671,7 +686,7 @@ input[type="range"]::-moz-range-thumb {
 .loading__text {
   font-family: var(--font-display);
   font-size: 1rem;
-  color: var(--color-secondary);
+  color: var(--color-accent-4);
 }
 
 @keyframes pulse {

@@ -45,6 +45,7 @@ async function init() {
     // Initialize UI components
     sequencer = new Sequencer(engine, transport, state);
     library = new SoundLibrary(sequencer);
+    sequencer.soundLibrary = library; // Connect library to sequencer
     editor = new VoiceEditor(engine, state);
     console.log('[SID] UI components ready');
 

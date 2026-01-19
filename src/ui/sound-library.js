@@ -102,10 +102,10 @@ export class SoundLibrary {
 
     // Add event listeners to sound items
     this.listEl.querySelectorAll('.sound-item').forEach(item => {
-      // Click to preview
+      // Click to select and preview
       item.addEventListener('click', () => {
         const index = parseInt(item.dataset.index, 10);
-        this.previewSound(this.currentCategory, index);
+        this.selectSound(this.currentCategory, index);
       });
 
       // Drag start
@@ -123,6 +123,49 @@ export class SoundLibrary {
         item.classList.remove('dragging');
       });
     });
+
+    // Restore selection visual if sound was from this category
+    this.updateSelectionVisual();
+  }
+
+  /**
+   * Select a sound (and preview it)
+   */
+  selectSound(category, index) {
+    const sound = PRESETS[category]?.[index];
+    if (!sound) return;
+
+    this.selectedSound = sound;
+    this.selectedCategory = category;
+    this.selectedIndex = index;
+
+    // Update visual selection
+    this.updateSelectionVisual();
+
+    // Preview the sound
+    this.previewSound(category, index);
+
+    console.log(`[Library] Selected: ${sound.name}`);
+  }
+
+  /**
+   * Update selection visual
+   */
+  updateSelectionVisual() {
+    // Clear all selection
+    this.listEl?.querySelectorAll('.sound-item').forEach(item => {
+      item.classList.remove('sound-item--selected');
+    });
+
+    // Mark selected if in current category
+    if (this.selectedCategory === this.currentCategory && this.selectedIndex !== undefined) {
+      const selectedEl = this.listEl?.querySelector(
+        `.sound-item[data-index="${this.selectedIndex}"]`
+      );
+      if (selectedEl) {
+        selectedEl.classList.add('sound-item--selected');
+      }
+    }
   }
 
   /**

@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(git add:*)",
-      "Bash(git commit -m \"$\\(cat <<''EOF''\nInitial scaffold: Vite + PWA + retro UI structure\n\n- package.json with Vite, PWA plugin, Vitest\n- index.html with full UI layout \\(header, library, sequencer, editor\\)\n- CSS with neon color palette \\(magenta/cyan/green/orange on black\\)\n- Placeholder modules: SID engine, transport, sequencer, voice editor\n- PWA manifest and icons folder\n- PRD and SID domain knowledge docs\n\nReady for npm install && npm run dev\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nInitial scaffold: Vite + PWA + retro UI structure\n\n- package.json with Vite, PWA plugin, Vitest\n- index.html with full UI layout \\(header, library, sequencer, editor\\)\n- CSS with neon color palette \\(magenta/cyan/green/orange on black\\)\n- Placeholder modules: SID engine, transport, sequencer, voice editor\n- PWA manifest and icons folder\n- PRD and SID domain knowledge docs\n\nReady for npm install && npm run dev\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git config:*)",
+      "Bash(git checkout:*)",
+      "Bash(npm install)"
     ]
   }
 }

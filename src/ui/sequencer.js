@@ -9,13 +9,16 @@ export class Sequencer {
     this.transport = transport;
     this.state = state;
 
+    // Reference to sound library (set after construction)
+    this.soundLibrary = null;
+
     // Grid configuration
     this.rows = 3; // 3 SID voices
     this.cols = 64; // 4 bars of 16th notes
     this.cellWidth = 32;
     this.cellHeight = 48;
 
-    // Grid data: [voice][step] = { note, velocity, ... } or null
+    // Grid data: [voice][step] = { note, velocity, sound } or null
     this.grid = Array(this.rows).fill(null).map(() => Array(this.cols).fill(null));
 
     // DOM elements
@@ -137,7 +140,17 @@ export class Sequencer {
     if (this.grid[row][col]) {
       this.clearCell(row, col);
     } else {
-      this.setCell(row, col, { note: 'C4', velocity: 1 });
+      // Use selected sound from library, or default
+      const sound = this.soundLibrary?.selectedSound;
+      if (sound) {
+        this.setCell(row, col, {
+          note: sound.note,
+          velocity: 1,
+          sound: { ...sound }
+        });
+      } else {
+        this.setCell(row, col, { note: 'C4', velocity: 1 });
+      }
     }
   }
 
@@ -200,6 +213,19 @@ export class Sequencer {
       const cellData = this.grid[voice][beat % this.cols];
       if (cellData) {
         import('../audio/sid-engine.js').then(({ noteToFrequency }) => {
+          // Apply sound parameters if available
+          if (cellData.sound) {
+            const s = cellData.sound;
+            this.engine.setVoiceParam(voice, 'waveform', s.waveform || 'pulse');
+            this.engine.setVoiceParam(voice, 'attack', s.attack || 0.01);
+            this.engine.setVoiceParam(voice, 'decay', s.decay || 0.1);
+            this.engine.setVoiceParam(voice, 'sustain', s.sustain || 0.7);
+            this.engine.setVoiceParam(voice, 'release', s.release || 0.2);
+            if (s.pulseWidth !== undefined) {
+              this.engine.setVoiceParam(voice, 'pulseWidth', s.pulseWidth / 100);
+            }
+          }
+
           const freq = noteToFrequency(cellData.note);
           const duration = 60 / this.state.bpm / 4; // 16th note duration
           this.engine.playNote(voice, freq, duration * 0.9);
