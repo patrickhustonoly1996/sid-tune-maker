@@ -6,15 +6,14 @@
 import { SIDEngine } from './audio/sid-engine.js';
 import { Sequencer } from './ui/sequencer.js';
 import { SoundLibrary } from './ui/sound-library.js';
-import { VoiceEditor } from './ui/voice-editor.js';
 import { Transport } from './audio/transport.js';
 import { ProjectManager } from './lib/project-manager.js';
+import { TuneLibrary } from './lib/tune-library.js';
 
 // App state
 const state = {
   bpm: 120,
   isPlaying: false,
-  currentVoice: 0,
   project: null
 };
 
@@ -22,9 +21,9 @@ const state = {
 let engine = null;
 let sequencer = null;
 let library = null;
-let editor = null;
 let transport = null;
 let projectManager = null;
+let tuneLibrary = null;
 
 /**
  * Initialize the application
@@ -46,12 +45,15 @@ async function init() {
     sequencer = new Sequencer(engine, transport, state);
     library = new SoundLibrary(sequencer);
     sequencer.soundLibrary = library; // Connect library to sequencer
-    editor = new VoiceEditor(engine, state);
     console.log('[SID] UI components ready');
 
     // Initialize project manager
     projectManager = new ProjectManager(state);
     console.log('[SID] Project manager ready');
+
+    // Initialize tune library (example tunes browser)
+    tuneLibrary = new TuneLibrary(projectManager, sequencer, engine);
+    console.log('[SID] Tune library ready');
 
     // Set up event listeners
     setupEventListeners();
@@ -198,4 +200,4 @@ if (document.readyState === 'loading') {
 }
 
 // Export for debugging
-window.SIDTuneMaker = { state, engine, transport, sequencer };
+window.SIDTuneMaker = { state, engine, transport, sequencer, library, tuneLibrary };

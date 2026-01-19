@@ -90,7 +90,7 @@ body::after {
    -------------------------------------------------------------------------- */
 #app {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr;
   height: 100vh;
   width: 100vw;
 }
@@ -214,70 +214,62 @@ body::after {
    -------------------------------------------------------------------------- */
 .main {
   display: grid;
-  grid-template-columns: 160px 1fr;
+  grid-template-columns: 140px 1fr;
   overflow: hidden;
 }
 
 /* --------------------------------------------------------------------------
-   Sound Library (Sidebar)
+   Sound Library (Sidebar) - Compact, no scroll
    -------------------------------------------------------------------------- */
 .library {
   border-right: var(--border);
-  padding: var(--space-1);
+  padding: 4px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
-  overflow: visible;
-  width: 160px;
+  gap: 2px;
+  overflow: hidden;
+  width: 140px;
 }
 
 .library__title {
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: var(--color-secondary);
   text-shadow: var(--glow-secondary);
   text-align: center;
-  margin-bottom: 4px;
+  padding: 2px 0;
 }
 
-.library__categories {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px;
-}
-
-.library__cat {
-  font-family: var(--font-display);
-  font-size: 0.8rem;
-  padding: 4px 2px;
-  background: transparent;
-  color: var(--color-accent-4);
-  border: 1px solid var(--color-grid-line);
-  cursor: pointer;
-  text-align: center;
-}
-
-.library__cat:hover {
-  border-color: var(--color-accent-4);
-}
-
-.library__cat--active {
-  background: var(--color-accent-1);
-  color: var(--color-bg);
-  border-color: var(--color-accent-1);
-}
-
-.library__sounds {
+.library__all-sounds {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 1px;
   flex: 1;
+}
+
+/* Sound groups - compact */
+.sound-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.sound-group__header {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  padding: 2px 4px;
+  text-shadow: 0 0 6px currentColor;
+}
+
+.sound-group__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
 }
 
 .sound-item {
   font-family: var(--font-body);
-  font-size: 0.75rem;
-  padding: 6px 8px;
+  font-size: 0.6rem;
+  padding: 2px 4px;
   background: var(--color-grid);
   color: var(--color-text);
   border: 1px solid var(--color-grid-line);
@@ -285,91 +277,140 @@ body::after {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 64px;
 }
 
 .sound-item:hover {
   border-color: var(--color-primary);
-  box-shadow: var(--glow-primary);
+  box-shadow: 0 0 5px var(--color-primary);
 }
 
 .sound-item--selected {
   border-color: var(--color-secondary);
   background: var(--color-grid-line);
-  box-shadow: var(--glow-secondary);
+  box-shadow: 0 0 5px var(--color-secondary);
 }
 
 /* --------------------------------------------------------------------------
-   Sequencer Grid
+   Sequencer - Piano Roll Style
    -------------------------------------------------------------------------- */
 .sequencer {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
-
-.sequencer__header {
-  display: flex;
-  border-bottom: var(--border);
-  padding: var(--space-1);
-}
-
-.sequencer__voice-labels {
-  width: 80px;
-  flex-shrink: 0;
-}
-
-.voice-label {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  color: var(--color-accent-2);
-  height: 48px;
-  display: flex;
-  align-items: center;
-  padding-left: var(--space-1);
-}
-
-.sequencer__timeline {
-  display: flex;
   flex: 1;
-  overflow-x: auto;
 }
 
-.beat-marker {
-  width: 32px;
-  flex-shrink: 0;
-  font-family: var(--font-body);
-  font-size: 0.7rem;
-  color: var(--color-grid-line);
-  text-align: center;
-  padding: 4px 0;
-}
-
-.beat-marker--bar {
-  color: var(--color-secondary);
-  font-weight: bold;
-}
-
-.sequencer__grid {
-  flex: 1;
+/* Voice tracks - each is a mini piano roll */
+.voice-track {
   display: flex;
   flex-direction: column;
-  overflow: auto;
-  background:
-    linear-gradient(90deg, var(--color-grid-line) 1px, transparent 1px),
-    linear-gradient(180deg, var(--color-grid-line) 1px, transparent 1px);
-  background-size: 32px 48px;
+  flex: 1;
+  min-height: 0;
+  border-bottom: 2px solid var(--color-accent-2);
+}
+
+/* Header with controls */
+.voice-track__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-grid-line);
+  flex-shrink: 0;
+}
+
+.voice-track__label {
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+  text-shadow: 0 0 8px currentColor;
+  min-width: 24px;
+}
+
+.voice-track__wave {
+  display: flex;
+  gap: 2px;
+}
+
+.voice-track__wave .wave-btn {
+  font-size: 0.55rem;
+  padding: 2px 4px;
+}
+
+.voice-track__adsr {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.adsr-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--color-accent-1);
+  margin-left: 4px;
+}
+
+.adsr-mini {
+  width: 32px;
+  height: 6px;
+}
+
+/* Piano roll area */
+.voice-track__piano-roll {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Piano keys column */
+.piano-keys {
+  width: 32px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  border-right: var(--border);
+}
+
+.piano-key {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 0.5rem;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-grid-line);
+  cursor: pointer;
+}
+
+.piano-key:hover {
+  background: var(--color-grid-line);
+}
+
+.piano-key--black {
+  background: var(--color-grid);
+  color: var(--color-accent-4);
+}
+
+/* Grid area */
+.piano-grid {
+  flex: 1;
+  display: grid;
+  overflow-x: auto;
+  overflow-y: hidden;
   background-color: var(--color-grid);
 }
 
 .grid-row {
   display: flex;
-  height: 48px;
-  flex-shrink: 0;
 }
 
 .grid-cell {
-  width: 32px;
-  height: 48px;
+  width: 24px;
   flex-shrink: 0;
   border-right: 1px solid var(--color-grid-line);
   border-bottom: 1px solid var(--color-grid-line);
@@ -377,28 +418,66 @@ body::after {
 }
 
 .grid-cell:hover {
-  background: rgba(255, 0, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .grid-cell--active {
   background: var(--color-primary);
-  box-shadow: var(--glow-primary);
+}
+
+/* Color each voice's active cells differently */
+.voice-track[data-voice="0"] .grid-cell--active {
+  background: #FF3300;
+}
+
+.voice-track[data-voice="1"] .grid-cell--active {
+  background: #39FF14;
+}
+
+.voice-track[data-voice="2"] .grid-cell--active {
+  background: #FF1493;
 }
 
 .grid-cell--playing {
-  background: var(--color-accent-1);
-  box-shadow: var(--glow-green);
+  background: var(--color-secondary) !important;
+  box-shadow: inset 0 0 8px var(--color-secondary);
+}
+
+.grid-cell--selected {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: -2px;
+  background: rgba(255, 255, 0, 0.15);
+}
+
+/* Note start - has rounded left edge */
+.grid-cell--note-start {
+  border-left: 2px solid rgba(255, 255, 255, 0.5);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+/* Note continuation - connected to previous cell */
+.grid-cell--note-cont {
+  border-left: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 .grid-cell--bar {
-  border-right: 1px solid var(--color-accent-2);
+  border-right: 2px solid var(--color-accent-2);
+}
+
+/* Black key rows are slightly darker */
+.grid-row--black {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .sequencer__controls {
   display: flex;
   align-items: center;
-  padding: var(--space-1) var(--space-2);
-  border-top: var(--border);
+  padding: 4px 8px;
+  background: var(--color-bg);
+  flex-shrink: 0;
 }
 
 .loop-region {
@@ -422,37 +501,8 @@ body::after {
 }
 
 /* --------------------------------------------------------------------------
-   Voice Editor (Bottom Panel)
+   Waveform and Controls (shared styles)
    -------------------------------------------------------------------------- */
-.editor {
-  display: flex;
-  gap: var(--space-3);
-  padding: var(--space-2);
-  border-top: var(--border);
-  background: var(--color-bg);
-  overflow-x: auto;
-}
-
-.editor__section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  min-width: 120px;
-}
-
-.editor__section h3 {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  color: var(--color-primary);
-  border-bottom: 1px solid var(--color-grid-line);
-  padding-bottom: 4px;
-}
-
-/* Waveform selector */
-.wave-select {
-  display: flex;
-  gap: 4px;
-}
 
 .wave-btn {
   font-family: var(--font-body);
@@ -758,4 +808,65 @@ input[type="range"]::-moz-range-thumb {
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Tune Browser (Example Tunes)
+   -------------------------------------------------------------------------- */
+.tune-browser {
+  border-bottom: var(--border);
+  padding: 4px;
+  background: var(--color-bg);
+}
+
+.tune-browser__header {
+  padding: 2px 4px;
+  margin-bottom: 4px;
+}
+
+.tune-browser__title {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--color-accent-1);
+  text-shadow: var(--glow-green);
+}
+
+.tune-browser__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tune-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 6px;
+  background: var(--color-grid);
+  border: 1px solid var(--color-grid-line);
+  cursor: pointer;
+  transition: none;
+}
+
+.tune-item:hover {
+  border-color: var(--color-accent-1);
+  box-shadow: 0 0 5px var(--color-accent-1);
+}
+
+.tune-item__name {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.tune-item__category {
+  font-family: var(--font-body);
+  font-size: 0.5rem;
+  color: var(--color-accent-4);
+  text-transform: uppercase;
+  margin-left: 4px;
 }
