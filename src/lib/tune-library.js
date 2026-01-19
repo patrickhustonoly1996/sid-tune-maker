@@ -101,11 +101,29 @@ export class TuneLibrary {
    * Set up event listeners
    */
   setupEvents() {
-    document.addEventListener('click', async (e) => {
+    // Handle both click and touch for tune items
+    const handleTuneSelect = async (e) => {
       const tuneItem = e.target.closest('.tune-item');
       if (tuneItem) {
+        e.preventDefault();
         const tuneId = tuneItem.dataset.tuneId;
         await this.loadTune(tuneId);
+
+        // Close library panel on mobile after loading
+        if (window.innerWidth <= 768) {
+          document.getElementById('library')?.classList.remove('library--visible');
+        }
+      }
+    };
+
+    document.addEventListener('click', handleTuneSelect);
+
+    // Touch support for mobile
+    document.addEventListener('touchend', (e) => {
+      const tuneItem = e.target.closest('.tune-item');
+      if (tuneItem) {
+        e.preventDefault();
+        handleTuneSelect(e);
       }
     });
   }

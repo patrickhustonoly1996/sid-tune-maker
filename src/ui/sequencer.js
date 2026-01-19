@@ -60,6 +60,10 @@ export class Sequencer {
     this.longPressTimer = null;
     this.longPressData = null;
 
+    // Track last placed note to prevent immediate toggle-off
+    this.lastPlacedNote = null;
+    this.lastPlacedTime = 0;
+
     // DOM elements
     this.pianoKeyEls = document.querySelectorAll('.piano-keys');
     this.pianoGridEls = document.querySelectorAll('.piano-grid');
@@ -332,10 +336,15 @@ export class Sequencer {
       // Clear selection
       this.clearSelection();
 
+      // Check if this is a recently placed note (within 300ms) - don't toggle it off
+      const noteKey = `${voice}-${noteIndex}-${col}`;
+      const now = Date.now();
+      const isRecentlyPlaced = this.lastPlacedNote === noteKey && (now - this.lastPlacedTime) < 300;
+
       // Check if clicking on existing note to delete it
-      if (this.grid[voice][noteIndex][col] || this.isNoteContinuation(voice, noteIndex, col)) {
+      if ((this.grid[voice][noteIndex][col] || this.isNoteContinuation(voice, noteIndex, col)) && !isRecentlyPlaced) {
         this.deleteNoteAt(voice, noteIndex, col);
-      } else {
+      } else if (!this.grid[voice][noteIndex][col] && !this.isNoteContinuation(voice, noteIndex, col)) {
         // Ctrl+click or mobile rapid mode = rapid note mode (place short notes)
         // Normal click = draw mode (can extend notes)
         this.isDrawing = true;
@@ -346,6 +355,10 @@ export class Sequencer {
         this.grid[voice][noteIndex][col] = { length: 1 };
         this.updateCellVisual(voice, noteIndex, col);
         this.previewNote(voice, noteIndex);
+
+        // Track this note to prevent immediate toggle-off
+        this.lastPlacedNote = noteKey;
+        this.lastPlacedTime = now;
       }
     }
   }

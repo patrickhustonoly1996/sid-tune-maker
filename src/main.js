@@ -77,7 +77,12 @@ async function init() {
 function setupEventListeners() {
   // Transport controls - single play/pause toggle
   const playPauseBtn = document.getElementById('btn-play-pause');
-  playPauseBtn?.addEventListener('click', () => {
+  playPauseBtn?.addEventListener('click', async () => {
+    // Always try to resume audio context on mobile
+    if (engine?.audioContext?.state === 'suspended') {
+      await engine.audioContext.resume();
+    }
+
     if (state.isPlaying) {
       transport.stop();
       state.isPlaying = false;
@@ -216,10 +221,16 @@ function resumeAudioContext() {
 /**
  * Handle keyboard shortcuts
  */
-function handleKeyboard(e) {
+async function handleKeyboard(e) {
   // Space = play/pause toggle
   if (e.code === 'Space' && !e.target.matches('input, textarea')) {
     e.preventDefault();
+
+    // Resume audio context if suspended
+    if (engine?.audioContext?.state === 'suspended') {
+      await engine.audioContext.resume();
+    }
+
     const playPauseBtn = document.getElementById('btn-play-pause');
     if (state.isPlaying) {
       transport.stop();
