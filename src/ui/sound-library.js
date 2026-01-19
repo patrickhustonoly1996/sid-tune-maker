@@ -3,116 +3,108 @@
  * Manages the sidebar with sound categories and presets
  */
 
-// Preset sound definitions
+// Preset sound definitions - short names to fit compact UI
 const PRESETS = {
   bass: [
-    { name: 'Chunky Bass', note: 'C2', waveform: 'pulse', pulseWidth: 30, attack: 0.01, decay: 0.2, sustain: 0.6, release: 0.1 },
-    { name: 'Wobble Bass', note: 'C2', waveform: 'sawtooth', attack: 0.01, decay: 0.3, sustain: 0.5, release: 0.2 },
-    { name: 'Sub Bass', note: 'C1', waveform: 'triangle', attack: 0.02, decay: 0.1, sustain: 0.9, release: 0.3 },
-    { name: 'Punchy Bass', note: 'C2', waveform: 'pulse', pulseWidth: 50, attack: 0.005, decay: 0.15, sustain: 0.4, release: 0.1 },
-    { name: 'Smooth Bass', note: 'C2', waveform: 'triangle', attack: 0.05, decay: 0.2, sustain: 0.7, release: 0.2 },
+    { name: 'Chunky', note: 'C2', waveform: 'pulse', pulseWidth: 30, attack: 0.01, decay: 0.2, sustain: 0.6, release: 0.1 },
+    { name: 'Wobble', note: 'C2', waveform: 'sawtooth', attack: 0.01, decay: 0.3, sustain: 0.5, release: 0.2 },
+    { name: 'Sub', note: 'C1', waveform: 'triangle', attack: 0.02, decay: 0.1, sustain: 0.9, release: 0.3 },
+    { name: 'Punch', note: 'C2', waveform: 'pulse', pulseWidth: 50, attack: 0.005, decay: 0.15, sustain: 0.4, release: 0.1 },
   ],
   lead: [
-    { name: 'Bright Lead', note: 'C4', waveform: 'sawtooth', attack: 0.01, decay: 0.2, sustain: 0.8, release: 0.3 },
-    { name: 'Dark Lead', note: 'C4', waveform: 'pulse', pulseWidth: 25, attack: 0.02, decay: 0.3, sustain: 0.6, release: 0.2 },
-    { name: 'Plucky Lead', note: 'C4', waveform: 'pulse', pulseWidth: 50, attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.1 },
-    { name: 'Soft Lead', note: 'C4', waveform: 'triangle', attack: 0.1, decay: 0.2, sustain: 0.7, release: 0.4 },
-    { name: 'Screamer', note: 'C5', waveform: 'sawtooth', attack: 0.01, decay: 0.1, sustain: 0.9, release: 0.2 },
+    { name: 'Bright', note: 'C4', waveform: 'sawtooth', attack: 0.01, decay: 0.2, sustain: 0.8, release: 0.3 },
+    { name: 'Dark', note: 'C4', waveform: 'pulse', pulseWidth: 25, attack: 0.02, decay: 0.3, sustain: 0.6, release: 0.2 },
+    { name: 'Pluck', note: 'C4', waveform: 'pulse', pulseWidth: 50, attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.1 },
+    { name: 'Soft', note: 'C4', waveform: 'triangle', attack: 0.1, decay: 0.2, sustain: 0.7, release: 0.4 },
   ],
   arp: [
-    { name: 'Classic Arp', note: 'C4', waveform: 'pulse', pulseWidth: 50, attack: 0.005, decay: 0.1, sustain: 0.5, release: 0.05 },
-    { name: 'Bright Arp', note: 'C4', waveform: 'sawtooth', attack: 0.005, decay: 0.08, sustain: 0.4, release: 0.05 },
-    { name: 'Soft Arp', note: 'C4', waveform: 'triangle', attack: 0.01, decay: 0.1, sustain: 0.6, release: 0.1 },
-    { name: 'Staccato', note: 'C4', waveform: 'pulse', pulseWidth: 40, attack: 0.002, decay: 0.05, sustain: 0.2, release: 0.02 },
+    { name: 'Classic', note: 'C4', waveform: 'pulse', pulseWidth: 50, attack: 0.005, decay: 0.1, sustain: 0.5, release: 0.05 },
+    { name: 'Bright', note: 'C4', waveform: 'sawtooth', attack: 0.005, decay: 0.08, sustain: 0.4, release: 0.05 },
+    { name: 'Stac', note: 'C4', waveform: 'pulse', pulseWidth: 40, attack: 0.002, decay: 0.05, sustain: 0.2, release: 0.02 },
   ],
   drums: [
     { name: 'Kick', note: 'C1', waveform: 'triangle', attack: 0.001, decay: 0.15, sustain: 0.0, release: 0.1, pitchDecay: true },
     { name: 'Snare', note: 'C3', waveform: 'noise', attack: 0.001, decay: 0.1, sustain: 0.0, release: 0.1 },
-    { name: 'Hi-Hat', note: 'C5', waveform: 'noise', attack: 0.001, decay: 0.05, sustain: 0.0, release: 0.02 },
-    { name: 'Open Hat', note: 'C5', waveform: 'noise', attack: 0.001, decay: 0.2, sustain: 0.1, release: 0.1 },
+    { name: 'HiHat', note: 'C5', waveform: 'noise', attack: 0.001, decay: 0.05, sustain: 0.0, release: 0.02 },
     { name: 'Tom', note: 'G2', waveform: 'triangle', attack: 0.001, decay: 0.2, sustain: 0.0, release: 0.1 },
   ],
   fx: [
-    { name: 'Sweep Up', note: 'C3', waveform: 'sawtooth', attack: 0.5, decay: 0.1, sustain: 0.8, release: 0.2 },
-    { name: 'Sweep Down', note: 'C5', waveform: 'sawtooth', attack: 0.01, decay: 0.5, sustain: 0.0, release: 0.1 },
+    { name: 'Up', note: 'C3', waveform: 'sawtooth', attack: 0.5, decay: 0.1, sustain: 0.8, release: 0.2 },
+    { name: 'Down', note: 'C5', waveform: 'sawtooth', attack: 0.01, decay: 0.5, sustain: 0.0, release: 0.1 },
     { name: 'Blip', note: 'C6', waveform: 'pulse', pulseWidth: 50, attack: 0.001, decay: 0.02, sustain: 0.0, release: 0.01 },
     { name: 'Laser', note: 'C5', waveform: 'sawtooth', attack: 0.001, decay: 0.3, sustain: 0.0, release: 0.1, pitchDecay: true },
-    { name: 'Noise Burst', note: 'C4', waveform: 'noise', attack: 0.001, decay: 0.1, sustain: 0.0, release: 0.05 },
   ]
+};
+
+// Category display names and colors
+const CATEGORY_CONFIG = {
+  bass: { label: 'BASS', color: '#FF3300' },
+  lead: { label: 'LEAD', color: '#FFFF00' },
+  arp: { label: 'ARP', color: '#39FF14' },
+  drums: { label: 'DRUMS', color: '#FF1493' },
+  fx: { label: 'FX', color: '#00FF66' }
 };
 
 export class SoundLibrary {
   constructor(sequencer) {
     this.sequencer = sequencer;
-    this.currentCategory = 'bass';
     this.selectedSound = null;
+    this.selectedCategory = null;
+    this.selectedIndex = null;
 
     // DOM elements
     this.listEl = document.getElementById('sound-list');
-    this.categoryBtns = document.querySelectorAll('.library__cat');
 
-    this.setupEvents();
-    this.renderSounds();
+    this.renderAllSounds();
   }
 
   /**
-   * Set up event listeners
+   * Render all sounds grouped by category
    */
-  setupEvents() {
-    // Category buttons
-    this.categoryBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        this.selectCategory(btn.dataset.category);
-      });
-    });
-  }
-
-  /**
-   * Select a category
-   */
-  selectCategory(category) {
-    if (!PRESETS[category]) return;
-
-    this.currentCategory = category;
-
-    // Update button states
-    this.categoryBtns.forEach(btn => {
-      btn.classList.toggle('library__cat--active', btn.dataset.category === category);
-    });
-
-    this.renderSounds();
-  }
-
-  /**
-   * Render sounds for current category
-   */
-  renderSounds() {
+  renderAllSounds() {
     if (!this.listEl) return;
 
-    const sounds = PRESETS[this.currentCategory] || [];
+    let html = '';
 
-    this.listEl.innerHTML = sounds.map((sound, index) => `
-      <div class="sound-item"
-           data-category="${this.currentCategory}"
-           data-index="${index}"
-           draggable="true">
-        ${sound.name}
-      </div>
-    `).join('');
+    // Render each category with its sounds
+    for (const [category, sounds] of Object.entries(PRESETS)) {
+      const config = CATEGORY_CONFIG[category];
 
-    // Add event listeners to sound items
+      html += `
+        <div class="sound-group" data-category="${category}">
+          <div class="sound-group__header" style="color: ${config.color}; border-color: ${config.color}">
+            ${config.label}
+          </div>
+          <div class="sound-group__items">
+            ${sounds.map((sound, index) => `
+              <div class="sound-item"
+                   data-category="${category}"
+                   data-index="${index}"
+                   draggable="true">
+                ${sound.name}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    this.listEl.innerHTML = html;
+
+    // Add event listeners to all sound items
     this.listEl.querySelectorAll('.sound-item').forEach(item => {
+      const category = item.dataset.category;
+      const index = parseInt(item.dataset.index, 10);
+
       // Click to select and preview
       item.addEventListener('click', () => {
-        const index = parseInt(item.dataset.index, 10);
-        this.selectSound(this.currentCategory, index);
+        this.selectSound(category, index);
       });
 
       // Drag start
       item.addEventListener('dragstart', (e) => {
-        const index = parseInt(item.dataset.index, 10);
         e.dataTransfer.setData('application/json', JSON.stringify({
-          category: this.currentCategory,
+          category: category,
           index: index
         }));
         item.classList.add('dragging');
@@ -123,9 +115,6 @@ export class SoundLibrary {
         item.classList.remove('dragging');
       });
     });
-
-    // Restore selection visual if sound was from this category
-    this.updateSelectionVisual();
   }
 
   /**
@@ -145,6 +134,11 @@ export class SoundLibrary {
     // Preview the sound
     this.previewSound(category, index);
 
+    // On mobile, close the library panel after selection
+    if (window.innerWidth <= 768) {
+      document.getElementById('library')?.classList.remove('library--visible');
+    }
+
     console.log(`[Library] Selected: ${sound.name}`);
   }
 
@@ -157,10 +151,10 @@ export class SoundLibrary {
       item.classList.remove('sound-item--selected');
     });
 
-    // Mark selected if in current category
-    if (this.selectedCategory === this.currentCategory && this.selectedIndex !== undefined) {
+    // Mark selected item
+    if (this.selectedCategory && this.selectedIndex !== undefined) {
       const selectedEl = this.listEl?.querySelector(
-        `.sound-item[data-index="${this.selectedIndex}"]`
+        `.sound-item[data-category="${this.selectedCategory}"][data-index="${this.selectedIndex}"]`
       );
       if (selectedEl) {
         selectedEl.classList.add('sound-item--selected');

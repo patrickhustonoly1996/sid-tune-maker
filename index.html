@@ -30,8 +30,7 @@
         <button class="btn" id="btn-open">OPEN</button>
         <button class="btn" id="btn-save">SAVE</button>
         <div class="toolbar__spacer"></div>
-        <button class="btn btn--play" id="btn-play">PLAY</button>
-        <button class="btn btn--stop" id="btn-stop">STOP</button>
+        <button class="btn btn--play" id="btn-play-pause">PLAY</button>
         <div class="bpm-control">
           <label for="bpm">BPM:</label>
           <input type="number" id="bpm" value="120" min="60" max="200" step="1">
@@ -39,38 +38,110 @@
       </div>
     </header>
 
+    <!-- Mobile Toolbar -->
+    <div class="mobile-toolbar" id="mobile-toolbar">
+      <button class="mobile-btn" id="mobile-sounds" title="Sounds">SND</button>
+      <button class="mobile-btn" id="mobile-select" title="Select Mode">SEL</button>
+      <button class="mobile-btn" id="mobile-rapid" title="Rapid Notes">RPD</button>
+      <button class="mobile-btn" id="mobile-copy" title="Copy">CPY</button>
+      <button class="mobile-btn" id="mobile-paste" title="Paste">PST</button>
+      <button class="mobile-btn" id="mobile-delete" title="Delete">DEL</button>
+      <button class="mobile-btn" id="mobile-undo" title="Undo">UND</button>
+    </div>
+
     <!-- Main Content -->
     <main class="main">
       <!-- Sound Library (Sidebar) -->
-      <aside class="library">
-        <h2 class="library__title">SOUNDS</h2>
-        <div class="library__categories">
-          <button class="library__cat library__cat--active" data-category="bass">BASS</button>
-          <button class="library__cat" data-category="lead">LEAD</button>
-          <button class="library__cat" data-category="arp">ARP</button>
-          <button class="library__cat" data-category="drums">DRUMS</button>
-          <button class="library__cat" data-category="fx">FX</button>
-        </div>
-        <div class="library__sounds" id="sound-list">
-          <!-- Sound items populated by JS -->
+      <aside class="library" id="library">
+        <h2 class="library__title">SOUNDS <button class="library__close" id="library-close">X</button></h2>
+        <div class="library__all-sounds" id="sound-list">
+          <!-- All sound groups populated by JS -->
         </div>
       </aside>
 
-      <!-- Sequencer Grid -->
+      <!-- Sequencer - 3 voice piano rolls stacked -->
       <section class="sequencer">
-        <div class="sequencer__header">
-          <div class="sequencer__voice-labels">
-            <div class="voice-label">VOICE 1</div>
-            <div class="voice-label">VOICE 2</div>
-            <div class="voice-label">VOICE 3</div>
+        <!-- Voice 1 -->
+        <div class="voice-track" data-voice="0">
+          <div class="voice-track__header">
+            <span class="voice-track__label" style="color: #FF3300">V1</span>
+            <div class="voice-track__wave">
+              <button class="wave-btn wave-btn--active" data-voice="0" data-wave="pulse">PLS</button>
+              <button class="wave-btn" data-voice="0" data-wave="sawtooth">SAW</button>
+              <button class="wave-btn" data-voice="0" data-wave="triangle">TRI</button>
+              <button class="wave-btn" data-voice="0" data-wave="noise">NOS</button>
+            </div>
+            <div class="voice-track__adsr">
+              <span class="adsr-label">A</span><input type="range" class="adsr-mini" data-voice="0" data-param="attack" min="0" max="100" value="10">
+              <span class="adsr-label">D</span><input type="range" class="adsr-mini" data-voice="0" data-param="decay" min="0" max="100" value="20">
+              <span class="adsr-label">S</span><input type="range" class="adsr-mini" data-voice="0" data-param="sustain" min="0" max="100" value="70">
+              <span class="adsr-label">R</span><input type="range" class="adsr-mini" data-voice="0" data-param="release" min="0" max="100" value="30">
+            </div>
           </div>
-          <div class="sequencer__timeline" id="timeline">
-            <!-- Beat markers populated by JS -->
+          <div class="voice-track__piano-roll">
+            <div class="piano-keys" data-voice="0">
+              <!-- Piano keys populated by JS -->
+            </div>
+            <div class="piano-grid" data-voice="0">
+              <!-- Grid cells populated by JS -->
+            </div>
           </div>
         </div>
-        <div class="sequencer__grid" id="grid">
-          <!-- Grid cells populated by JS -->
+
+        <!-- Voice 2 -->
+        <div class="voice-track" data-voice="1">
+          <div class="voice-track__header">
+            <span class="voice-track__label" style="color: #39FF14">V2</span>
+            <div class="voice-track__wave">
+              <button class="wave-btn wave-btn--active" data-voice="1" data-wave="pulse">PLS</button>
+              <button class="wave-btn" data-voice="1" data-wave="sawtooth">SAW</button>
+              <button class="wave-btn" data-voice="1" data-wave="triangle">TRI</button>
+              <button class="wave-btn" data-voice="1" data-wave="noise">NOS</button>
+            </div>
+            <div class="voice-track__adsr">
+              <span class="adsr-label">A</span><input type="range" class="adsr-mini" data-voice="1" data-param="attack" min="0" max="100" value="10">
+              <span class="adsr-label">D</span><input type="range" class="adsr-mini" data-voice="1" data-param="decay" min="0" max="100" value="20">
+              <span class="adsr-label">S</span><input type="range" class="adsr-mini" data-voice="1" data-param="sustain" min="0" max="100" value="70">
+              <span class="adsr-label">R</span><input type="range" class="adsr-mini" data-voice="1" data-param="release" min="0" max="100" value="30">
+            </div>
+          </div>
+          <div class="voice-track__piano-roll">
+            <div class="piano-keys" data-voice="1">
+              <!-- Piano keys populated by JS -->
+            </div>
+            <div class="piano-grid" data-voice="1">
+              <!-- Grid cells populated by JS -->
+            </div>
+          </div>
         </div>
+
+        <!-- Voice 3 -->
+        <div class="voice-track" data-voice="2">
+          <div class="voice-track__header">
+            <span class="voice-track__label" style="color: #FF1493">V3</span>
+            <div class="voice-track__wave">
+              <button class="wave-btn wave-btn--active" data-voice="2" data-wave="pulse">PLS</button>
+              <button class="wave-btn" data-voice="2" data-wave="sawtooth">SAW</button>
+              <button class="wave-btn" data-voice="2" data-wave="triangle">TRI</button>
+              <button class="wave-btn" data-voice="2" data-wave="noise">NOS</button>
+            </div>
+            <div class="voice-track__adsr">
+              <span class="adsr-label">A</span><input type="range" class="adsr-mini" data-voice="2" data-param="attack" min="0" max="100" value="10">
+              <span class="adsr-label">D</span><input type="range" class="adsr-mini" data-voice="2" data-param="decay" min="0" max="100" value="20">
+              <span class="adsr-label">S</span><input type="range" class="adsr-mini" data-voice="2" data-param="sustain" min="0" max="100" value="70">
+              <span class="adsr-label">R</span><input type="range" class="adsr-mini" data-voice="2" data-param="release" min="0" max="100" value="30">
+            </div>
+          </div>
+          <div class="voice-track__piano-roll">
+            <div class="piano-keys" data-voice="2">
+              <!-- Piano keys populated by JS -->
+            </div>
+            <div class="piano-grid" data-voice="2">
+              <!-- Grid cells populated by JS -->
+            </div>
+          </div>
+        </div>
+
         <div class="sequencer__controls">
           <div class="loop-region">
             <span>LOOP:</span>
@@ -82,89 +153,6 @@
         </div>
       </section>
     </main>
-
-    <!-- Voice Editor (Bottom Panel) -->
-    <footer class="editor">
-      <div class="editor__section">
-        <h3>WAVEFORM</h3>
-        <div class="wave-select">
-          <button class="wave-btn wave-btn--active" data-wave="pulse">PULSE</button>
-          <button class="wave-btn" data-wave="sawtooth">SAW</button>
-          <button class="wave-btn" data-wave="triangle">TRI</button>
-          <button class="wave-btn" data-wave="noise">NOISE</button>
-        </div>
-        <div class="pulse-width">
-          <label>PW:</label>
-          <input type="range" id="pulse-width" min="0" max="100" value="50">
-          <span id="pulse-width-val">50%</span>
-        </div>
-      </div>
-
-      <div class="editor__section">
-        <h3>ADSR</h3>
-        <div class="adsr-controls">
-          <div class="adsr-knob">
-            <label>A</label>
-            <input type="range" id="attack" min="0" max="100" value="10" orient="vertical">
-          </div>
-          <div class="adsr-knob">
-            <label>D</label>
-            <input type="range" id="decay" min="0" max="100" value="20" orient="vertical">
-          </div>
-          <div class="adsr-knob">
-            <label>S</label>
-            <input type="range" id="sustain" min="0" max="100" value="70" orient="vertical">
-          </div>
-          <div class="adsr-knob">
-            <label>R</label>
-            <input type="range" id="release" min="0" max="100" value="30" orient="vertical">
-          </div>
-        </div>
-      </div>
-
-      <div class="editor__section">
-        <h3>FILTER</h3>
-        <div class="filter-controls">
-          <div class="filter-type">
-            <button class="filter-btn filter-btn--active" data-filter="lowpass">LP</button>
-            <button class="filter-btn" data-filter="bandpass">BP</button>
-            <button class="filter-btn" data-filter="highpass">HP</button>
-          </div>
-          <div class="filter-params">
-            <div class="filter-knob">
-              <label>CUTOFF</label>
-              <input type="range" id="filter-cutoff" min="0" max="100" value="80">
-            </div>
-            <div class="filter-knob">
-              <label>RES</label>
-              <input type="range" id="filter-res" min="0" max="100" value="20">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="editor__section">
-        <h3>FX</h3>
-        <div class="fx-controls">
-          <label class="fx-toggle">
-            <input type="checkbox" id="ring-mod">
-            <span>RING</span>
-          </label>
-          <label class="fx-toggle">
-            <input type="checkbox" id="sync">
-            <span>SYNC</span>
-          </label>
-          <label class="fx-toggle">
-            <input type="checkbox" id="reverb">
-            <span>REVERB</span>
-          </label>
-          <label class="fx-toggle">
-            <input type="checkbox" id="delay">
-            <span>DELAY</span>
-          </label>
-        </div>
-      </div>
-    </footer>
   </div>
 
   <!-- Loading Screen -->

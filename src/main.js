@@ -75,15 +75,20 @@ async function init() {
  * Set up DOM event listeners
  */
 function setupEventListeners() {
-  // Transport controls
-  document.getElementById('btn-play')?.addEventListener('click', () => {
-    transport.play();
-    state.isPlaying = true;
-  });
-
-  document.getElementById('btn-stop')?.addEventListener('click', () => {
-    transport.stop();
-    state.isPlaying = false;
+  // Transport controls - single play/pause toggle
+  const playPauseBtn = document.getElementById('btn-play-pause');
+  playPauseBtn?.addEventListener('click', () => {
+    if (state.isPlaying) {
+      transport.stop();
+      state.isPlaying = false;
+      playPauseBtn.textContent = 'PLAY';
+      playPauseBtn.classList.remove('btn--playing');
+    } else {
+      transport.play();
+      state.isPlaying = true;
+      playPauseBtn.textContent = 'PAUSE';
+      playPauseBtn.classList.add('btn--playing');
+    }
   });
 
   // BPM control
@@ -125,6 +130,78 @@ function setupEventListeners() {
   // Handle audio context resume on user interaction
   document.addEventListener('click', resumeAudioContext, { once: true });
   document.addEventListener('keydown', resumeAudioContext, { once: true });
+
+  // Mobile toolbar
+  setupMobileToolbar();
+}
+
+/**
+ * Set up mobile toolbar event listeners
+ */
+function setupMobileToolbar() {
+  const libraryEl = document.getElementById('library');
+  const selectBtn = document.getElementById('mobile-select');
+  const rapidBtn = document.getElementById('mobile-rapid');
+
+  // Sounds button - toggle sound library
+  document.getElementById('mobile-sounds')?.addEventListener('click', () => {
+    libraryEl?.classList.toggle('library--visible');
+  });
+
+  // Close library button
+  document.getElementById('library-close')?.addEventListener('click', () => {
+    libraryEl?.classList.remove('library--visible');
+  });
+
+  // Select mode toggle
+  selectBtn?.addEventListener('click', () => {
+    sequencer.mobileSelectMode = !sequencer.mobileSelectMode;
+    selectBtn.classList.toggle('mobile-btn--active', sequencer.mobileSelectMode);
+    // Turn off rapid mode if select is on
+    if (sequencer.mobileSelectMode) {
+      sequencer.mobileRapidMode = false;
+      rapidBtn?.classList.remove('mobile-btn--active');
+    }
+  });
+
+  // Rapid mode toggle
+  rapidBtn?.addEventListener('click', () => {
+    sequencer.mobileRapidMode = !sequencer.mobileRapidMode;
+    rapidBtn.classList.toggle('mobile-btn--active', sequencer.mobileRapidMode);
+    // Turn off select mode if rapid is on
+    if (sequencer.mobileRapidMode) {
+      sequencer.mobileSelectMode = false;
+      selectBtn?.classList.remove('mobile-btn--active');
+    }
+  });
+
+  // Copy
+  document.getElementById('mobile-copy')?.addEventListener('click', () => {
+    if (sequencer.selection) {
+      sequencer.copySelection();
+    }
+  });
+
+  // Paste
+  document.getElementById('mobile-paste')?.addEventListener('click', () => {
+    if (sequencer.clipboard) {
+      sequencer.pasteClipboard();
+    }
+  });
+
+  // Delete
+  document.getElementById('mobile-delete')?.addEventListener('click', () => {
+    if (sequencer.selection) {
+      sequencer.deleteSelection();
+    }
+  });
+
+  // Undo - clear all (simple undo for now)
+  document.getElementById('mobile-undo')?.addEventListener('click', () => {
+    if (confirm('Clear all notes?')) {
+      sequencer.clearAll();
+    }
+  });
 }
 
 /**
@@ -140,15 +217,24 @@ function resumeAudioContext() {
  * Handle keyboard shortcuts
  */
 function handleKeyboard(e) {
-  // Space = play/stop
+  // Space = play/pause toggle
   if (e.code === 'Space' && !e.target.matches('input, textarea')) {
     e.preventDefault();
+    const playPauseBtn = document.getElementById('btn-play-pause');
     if (state.isPlaying) {
       transport.stop();
       state.isPlaying = false;
+      if (playPauseBtn) {
+        playPauseBtn.textContent = 'PLAY';
+        playPauseBtn.classList.remove('btn--playing');
+      }
     } else {
       transport.play();
       state.isPlaying = true;
+      if (playPauseBtn) {
+        playPauseBtn.textContent = 'PAUSE';
+        playPauseBtn.classList.add('btn--playing');
+      }
     }
   }
 

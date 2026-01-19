@@ -64,6 +64,9 @@ body {
   line-height: 1.4;
   min-height: 100vh;
   overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Scanline overlay effect */
@@ -163,6 +166,7 @@ body::after {
 .btn--play {
   color: var(--color-accent-1);
   border-color: var(--color-accent-1);
+  min-width: 70px;
 }
 
 .btn--play:hover {
@@ -171,15 +175,17 @@ body::after {
   box-shadow: var(--glow-green);
 }
 
-.btn--stop {
-  color: var(--color-accent-2);
-  border-color: var(--color-accent-2);
-}
-
-.btn--stop:hover {
+.btn--play.btn--playing {
   background: var(--color-accent-2);
   color: var(--color-bg);
+  border-color: var(--color-accent-2);
   box-shadow: var(--glow-orange);
+}
+
+.btn--play.btn--playing:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  box-shadow: var(--glow-primary);
 }
 
 /* BPM Control */
@@ -354,7 +360,8 @@ body::after {
 
 .adsr-mini {
   width: 32px;
-  height: 6px;
+  height: 12px;
+  margin: 2px 0;
 }
 
 /* Piano roll area */
@@ -403,6 +410,7 @@ body::after {
   overflow-x: auto;
   overflow-y: hidden;
   background-color: var(--color-grid);
+  touch-action: pan-x; /* Allow horizontal scroll, prevent other gestures */
 }
 
 .grid-row {
@@ -415,6 +423,7 @@ body::after {
   border-right: 1px solid var(--color-grid-line);
   border-bottom: 1px solid var(--color-grid-line);
   cursor: pointer;
+  touch-action: none; /* Prevent gestures on individual cells */
 }
 
 .grid-cell:hover {
@@ -663,11 +672,12 @@ input[type="range"] {
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 12px;
-  height: 16px;
+  width: 10px;
+  height: 14px;
   background: var(--color-accent-2);
   border: none;
   cursor: pointer;
+  margin-top: -3px;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
@@ -676,10 +686,11 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 input[type="range"]::-moz-range-thumb {
-  width: 12px;
-  height: 16px;
+  width: 10px;
+  height: 14px;
   background: var(--color-accent-2);
   border: none;
+  border-radius: 0;
   cursor: pointer;
 }
 
@@ -750,9 +761,50 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* --------------------------------------------------------------------------
+   Mobile Toolbar
+   -------------------------------------------------------------------------- */
+.mobile-toolbar {
+  display: none;
+  background: var(--color-bg);
+  border-bottom: var(--border);
+  padding: 4px;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mobile-btn {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  background: var(--color-grid);
+  color: var(--color-accent-4);
+  border: 1px solid var(--color-grid-line);
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.mobile-btn:active {
+  background: var(--color-accent-4);
+  color: var(--color-bg);
+}
+
+.mobile-btn--active {
+  background: var(--color-secondary);
+  color: var(--color-bg);
+  border-color: var(--color-secondary);
+  box-shadow: var(--glow-secondary);
+}
+
+/* --------------------------------------------------------------------------
    Mobile Responsive
    -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
+  #app {
+    grid-template-rows: auto auto 1fr;
+  }
+
   .header {
     flex-direction: column;
     gap: var(--space-1);
@@ -766,29 +818,129 @@ input[type="range"]::-moz-range-thumb {
   .toolbar {
     flex-wrap: wrap;
     justify-content: center;
+    gap: 4px;
+  }
+
+  .toolbar__spacer {
+    display: none;
   }
 
   .main {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
+    overflow: hidden;
+  }
+
+  .mobile-toolbar {
+    display: flex;
   }
 
   .library {
-    display: none; /* Hidden on mobile, accessed via bottom tabs */
-  }
-
-  .editor {
+    display: none;
     position: fixed;
-    bottom: 0;
+    top: 0;
     left: 0;
     right: 0;
-    max-height: 40vh;
+    bottom: 0;
+    z-index: 100;
+    background: var(--color-bg);
+    width: 100%;
+    padding: 8px;
     overflow-y: auto;
   }
 
+  .library--visible {
+    display: flex;
+  }
+
+  .library__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .library__close {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    cursor: pointer;
+    padding: 4px 8px;
+  }
+
+  .sound-group__items {
+    gap: 4px;
+  }
+
+  .sound-item {
+    font-size: 0.8rem;
+    padding: 8px 12px;
+    max-width: none;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
   .btn {
-    padding: 6px 12px;
+    padding: 8px 12px;
     font-size: 1rem;
+    min-height: 44px;
+  }
+
+  /* Larger grid cells for touch */
+  .grid-cell {
+    width: 32px;
+    min-height: 20px;
+  }
+
+  .piano-key {
+    font-size: 0.6rem;
+    min-height: 20px;
+  }
+
+  /* Voice track adjustments */
+  .voice-track__header {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .voice-track__adsr {
+    display: none; /* Hide ADSR on mobile - too fiddly */
+  }
+
+  .wave-btn {
+    min-height: 36px;
+    min-width: 36px;
+    font-size: 0.65rem;
+  }
+
+  /* Hide BPM on very small screens */
+  .bpm-control {
+    display: flex;
+  }
+
+  .bpm-control input {
+    width: 50px;
+    min-height: 36px;
+  }
+
+  /* Sequencer controls */
+  .sequencer__controls {
+    display: none; /* Hide loop controls on mobile */
+  }
+
+  /* Sequencer takes full space */
+  .sequencer {
+    overflow: hidden;
+  }
+
+  .voice-track {
+    min-height: 80px;
+  }
+
+  .voice-track__piano-roll {
+    min-height: 60px;
   }
 }
 
