@@ -947,10 +947,24 @@ export class Sequencer {
 
   /**
    * Load grid data
+   * Handles both old format (true/false) and new format ({ length: n })
    */
   load(data) {
     if (!data) return;
-    this.grid = data;
+
+    // Convert old format to new format if needed
+    this.grid = data.map(voice =>
+      voice.map(noteRow =>
+        noteRow.map(cell => {
+          // Old format: true/false
+          if (cell === true) return { length: 1 };
+          if (cell === false || cell === null) return null;
+          // New format: { length: n } - pass through
+          return cell;
+        })
+      )
+    );
+
     this.render();
   }
 
