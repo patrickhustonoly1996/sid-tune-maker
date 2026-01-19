@@ -1,8 +1,11 @@
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
+// Use root for Vercel, subpath for GitHub Pages
+const base = process.env.VERCEL ? '/' : '/sid-tune-maker/';
+
 export default defineConfig({
-  base: '/sid-tune-maker/',
+  base,
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
