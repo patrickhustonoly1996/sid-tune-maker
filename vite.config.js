@@ -11,7 +11,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt', 'icons/*.png'],
       manifest: {
-        name: 'DIY Retro Bangers',
+        name: 'DIY Retro Bangers Online',
         short_name: 'DIY Bangers',
         description: 'Make 8-bit bangers',
         theme_color: '#000000',
