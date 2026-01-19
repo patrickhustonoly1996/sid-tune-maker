@@ -1,0 +1,19 @@
+{
+  "name": "sid-tune-maker",
+  "version": "0.1.0",
+  "description": "Retro C64-style SID music generator",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0",
+    "vite-plugin-pwa": "^0.20.0",
+    "vitest": "^2.0.0"
+  }
+}

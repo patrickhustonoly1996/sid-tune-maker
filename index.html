@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Retro C64-style SID music generator. Make 8-bit bangers with drag & drop.">
+
+  <title>SID Tune Maker</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/src/styles/main.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <h1 class="logo">SID TUNE MAKER</h1>
+      <div class="toolbar">
+        <button class="btn btn--primary" id="btn-new">NEW</button>
+        <button class="btn" id="btn-open">OPEN</button>
+        <button class="btn" id="btn-save">SAVE</button>
+        <div class="toolbar__spacer"></div>
+        <button class="btn btn--play" id="btn-play">PLAY</button>
+        <button class="btn btn--stop" id="btn-stop">STOP</button>
+        <div class="bpm-control">
+          <label for="bpm">BPM:</label>
+          <input type="number" id="bpm" value="120" min="60" max="200" step="1">
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Sound Library (Sidebar) -->
+      <aside class="library">
+        <h2 class="library__title">SOUNDS</h2>
+        <div class="library__categories">
+          <button class="library__cat library__cat--active" data-category="bass">BASS</button>
+          <button class="library__cat" data-category="lead">LEAD</button>
+          <button class="library__cat" data-category="arp">ARP</button>
+          <button class="library__cat" data-category="drums">DRUMS</button>
+          <button class="library__cat" data-category="fx">FX</button>
+        </div>
+        <div class="library__sounds" id="sound-list">
+          <!-- Sound items populated by JS -->
+        </div>
+      </aside>
+
+      <!-- Sequencer Grid -->
+      <section class="sequencer">
+        <div class="sequencer__header">
+          <div class="sequencer__voice-labels">
+            <div class="voice-label">VOICE 1</div>
+            <div class="voice-label">VOICE 2</div>
+            <div class="voice-label">VOICE 3</div>
+          </div>
+          <div class="sequencer__timeline" id="timeline">
+            <!-- Beat markers populated by JS -->
+          </div>
+        </div>
+        <div class="sequencer__grid" id="grid">
+          <!-- Grid cells populated by JS -->
+        </div>
+        <div class="sequencer__controls">
+          <div class="loop-region">
+            <span>LOOP:</span>
+            <input type="number" id="loop-start" value="1" min="1" max="64">
+            <span>-</span>
+            <input type="number" id="loop-end" value="4" min="1" max="64">
+            <span>BARS</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Voice Editor (Bottom Panel) -->
+    <footer class="editor">
+      <div class="editor__section">
+        <h3>WAVEFORM</h3>
+        <div class="wave-select">
+          <button class="wave-btn wave-btn--active" data-wave="pulse">PULSE</button>
+          <button class="wave-btn" data-wave="sawtooth">SAW</button>
+          <button class="wave-btn" data-wave="triangle">TRI</button>
+          <button class="wave-btn" data-wave="noise">NOISE</button>
+        </div>
+        <div class="pulse-width">
+          <label>PW:</label>
+          <input type="range" id="pulse-width" min="0" max="100" value="50">
+          <span id="pulse-width-val">50%</span>
+        </div>
+      </div>
+
+      <div class="editor__section">
+        <h3>ADSR</h3>
+        <div class="adsr-controls">
+          <div class="adsr-knob">
+            <label>A</label>
+            <input type="range" id="attack" min="0" max="100" value="10" orient="vertical">
+          </div>
+          <div class="adsr-knob">
+            <label>D</label>
+            <input type="range" id="decay" min="0" max="100" value="20" orient="vertical">
+          </div>
+          <div class="adsr-knob">
+            <label>S</label>
+            <input type="range" id="sustain" min="0" max="100" value="70" orient="vertical">
+          </div>
+          <div class="adsr-knob">
+            <label>R</label>
+            <input type="range" id="release" min="0" max="100" value="30" orient="vertical">
+          </div>
+        </div>
+      </div>
+
+      <div class="editor__section">
+        <h3>FILTER</h3>
+        <div class="filter-controls">
+          <div class="filter-type">
+            <button class="filter-btn filter-btn--active" data-filter="lowpass">LP</button>
+            <button class="filter-btn" data-filter="bandpass">BP</button>
+            <button class="filter-btn" data-filter="highpass">HP</button>
+          </div>
+          <div class="filter-params">
+            <div class="filter-knob">
+              <label>CUTOFF</label>
+              <input type="range" id="filter-cutoff" min="0" max="100" value="80">
+            </div>
+            <div class="filter-knob">
+              <label>RES</label>
+              <input type="range" id="filter-res" min="0" max="100" value="20">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="editor__section">
+        <h3>FX</h3>
+        <div class="fx-controls">
+          <label class="fx-toggle">
+            <input type="checkbox" id="ring-mod">
+            <span>RING</span>
+          </label>
+          <label class="fx-toggle">
+            <input type="checkbox" id="sync">
+            <span>SYNC</span>
+          </label>
+          <label class="fx-toggle">
+            <input type="checkbox" id="reverb">
+            <span>REVERB</span>
+          </label>
+          <label class="fx-toggle">
+            <input type="checkbox" id="delay">
+            <span>DELAY</span>
+          </label>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Loading Screen -->
+  <div class="loading" id="loading">
+    <div class="loading__content">
+      <div class="loading__logo">SID</div>
+      <div class="loading__bar">
+        <div class="loading__progress"></div>
+      </div>
+      <div class="loading__text">INITIALIZING...</div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
