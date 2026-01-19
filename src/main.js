@@ -8,7 +8,8 @@ import { Sequencer } from './ui/sequencer.js';
 import { SoundLibrary } from './ui/sound-library.js';
 import { Transport } from './audio/transport.js';
 import { ProjectManager } from './lib/project-manager.js';
-import { TuneLibrary } from './lib/tune-library.js';
+import { LibraryModal } from './ui/library-modal.js';
+import { ExportModal } from './ui/export-modal.js';
 
 // App state
 const state = {
@@ -23,7 +24,8 @@ let sequencer = null;
 let library = null;
 let transport = null;
 let projectManager = null;
-let tuneLibrary = null;
+let libraryModal = null;
+let exportModal = null;
 
 /**
  * Initialize the application
@@ -51,9 +53,13 @@ async function init() {
     projectManager = new ProjectManager(state);
     console.log('[SID] Project manager ready');
 
-    // Initialize tune library (example tunes browser)
-    tuneLibrary = new TuneLibrary(projectManager, sequencer, engine);
-    console.log('[SID] Tune library ready');
+    // Initialize library modal (user tunes + examples)
+    libraryModal = new LibraryModal(projectManager, sequencer, engine);
+    console.log('[SID] Library modal ready');
+
+    // Initialize export modal (MP3/WAV download)
+    exportModal = new ExportModal(projectManager, sequencer);
+    console.log('[SID] Export modal ready');
 
     // Set up event listeners
     setupEventListeners();
@@ -112,12 +118,15 @@ function setupEventListeners() {
     }
   });
 
-  document.getElementById('btn-save')?.addEventListener('click', () => {
-    projectManager.save();
-  });
-
-  document.getElementById('btn-open')?.addEventListener('click', () => {
-    projectManager.showOpenDialog();
+  document.getElementById('btn-save')?.addEventListener('click', async () => {
+    // Prompt for name if untitled
+    if (projectManager.currentProject?.name === 'Untitled') {
+      const name = prompt('Name your banger:', 'Untitled');
+      if (name) {
+        projectManager.currentProject.name = name;
+      }
+    }
+    await projectManager.save();
   });
 
   // Loop region
@@ -296,5 +305,5 @@ if (document.readyState === 'loading') {
   init();
 }
 
-// Export for debugging
-window.SIDTuneMaker = { state, engine, transport, sequencer, library, tuneLibrary };
+// Export for debugging and cross-module access
+window.SIDTuneMaker = { state, engine, transport, sequencer, library, libraryModal, exportModal, projectManager };

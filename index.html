@@ -17,6 +17,9 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
 
+  <!-- MP3 Encoder -->
+  <script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
+
   <!-- Styles -->
   <link rel="stylesheet" href="/src/styles/main.css">
 </head>
@@ -27,8 +30,9 @@
       <h1 class="logo">DIY RETRO BANGERS</h1>
       <div class="toolbar">
         <button class="btn btn--primary" id="btn-new">NEW</button>
-        <button class="btn" id="btn-open">OPEN</button>
+        <button class="btn" id="btn-library">TUNES</button>
         <button class="btn" id="btn-save">SAVE</button>
+        <button class="btn btn--export" id="btn-export">EXPORT</button>
         <div class="toolbar__spacer"></div>
         <button class="btn btn--play" id="btn-play-pause">PLAY</button>
         <div class="bpm-control">
@@ -153,6 +157,66 @@
         </div>
       </section>
     </main>
+  </div>
+
+  <!-- Library Modal -->
+  <div class="modal" id="modal-library">
+    <div class="modal__backdrop"></div>
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2 class="modal__title">TUNE LIBRARY</h2>
+        <button class="modal__close" data-close>&times;</button>
+      </div>
+      <div class="modal__body">
+        <div class="library-tabs">
+          <button class="library-tab library-tab--active" data-tab="my-tunes">MY TUNES</button>
+          <button class="library-tab" data-tab="examples">EXAMPLES</button>
+        </div>
+        <div class="library-content" id="library-my-tunes">
+          <div class="library-empty" id="library-empty">
+            <p>No saved tunes yet!</p>
+            <p>Create a tune and click SAVE to add it here.</p>
+          </div>
+          <div class="library-list" id="my-tunes-list"></div>
+        </div>
+        <div class="library-content hidden" id="library-examples">
+          <div class="library-list" id="example-tunes-list"></div>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn" id="btn-save-to-library">SAVE CURRENT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export Modal -->
+  <div class="modal" id="modal-export">
+    <div class="modal__backdrop"></div>
+    <div class="modal__content modal__content--small">
+      <div class="modal__header">
+        <h2 class="modal__title">EXPORT TUNE</h2>
+        <button class="modal__close" data-close>&times;</button>
+      </div>
+      <div class="modal__body">
+        <p class="export-info">Download your banger to share with friends!</p>
+        <div class="export-buttons">
+          <button class="btn btn--large btn--export-format" id="btn-export-mp3">
+            <span class="export-icon">MP3</span>
+            <span class="export-desc">Best for sharing</span>
+          </button>
+          <button class="btn btn--large btn--export-format" id="btn-export-wav">
+            <span class="export-icon">WAV</span>
+            <span class="export-desc">Highest quality</span>
+          </button>
+        </div>
+        <div class="export-progress hidden" id="export-progress">
+          <div class="export-progress__bar">
+            <div class="export-progress__fill"></div>
+          </div>
+          <p class="export-progress__text">Rendering...</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Loading Screen -->

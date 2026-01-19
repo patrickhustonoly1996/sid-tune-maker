@@ -1022,3 +1022,321 @@ input[type="range"]::-moz-range-thumb {
   text-transform: uppercase;
   margin-left: 4px;
 }
+
+/* --------------------------------------------------------------------------
+   Modal Styles
+   -------------------------------------------------------------------------- */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal--visible {
+  display: flex;
+}
+
+.modal__backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.modal__content {
+  position: relative;
+  background: var(--color-bg);
+  border: 2px solid var(--color-accent-2);
+  box-shadow: 0 0 30px var(--color-accent-2), inset 0 0 20px rgba(255, 102, 0, 0.1);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__content--small {
+  max-width: 380px;
+}
+
+.modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--color-grid-line);
+}
+
+.modal__title {
+  font-family: var(--font-pixel);
+  font-size: 0.9rem;
+  color: var(--color-secondary);
+  text-shadow: var(--glow-secondary);
+}
+
+.modal__close {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 8px;
+}
+
+.modal__close:hover {
+  color: var(--color-secondary);
+  text-shadow: var(--glow-secondary);
+}
+
+.modal__body {
+  padding: var(--space-2);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal__footer {
+  padding: var(--space-2);
+  border-top: 1px solid var(--color-grid-line);
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   Library Modal Styles
+   -------------------------------------------------------------------------- */
+.library-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: var(--space-2);
+}
+
+.library-tab {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  padding: 8px 16px;
+  background: var(--color-grid);
+  color: var(--color-text);
+  border: 1px solid var(--color-grid-line);
+  cursor: pointer;
+  flex: 1;
+}
+
+.library-tab:hover {
+  border-color: var(--color-accent-4);
+}
+
+.library-tab--active {
+  background: var(--color-accent-1);
+  color: var(--color-bg);
+  border-color: var(--color-accent-1);
+  box-shadow: var(--glow-green);
+}
+
+.library-content {
+  min-height: 200px;
+}
+
+.library-empty {
+  text-align: center;
+  padding: var(--space-4);
+  color: var(--color-grid-line);
+}
+
+.library-empty p {
+  margin: var(--space-1) 0;
+}
+
+.library-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.library-tune {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--color-grid);
+  border: 1px solid var(--color-grid-line);
+  cursor: pointer;
+}
+
+.library-tune:hover {
+  border-color: var(--color-accent-1);
+  box-shadow: 0 0 8px var(--color-accent-1);
+}
+
+.library-tune__info {
+  flex: 1;
+}
+
+.library-tune__name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--color-text);
+  display: block;
+}
+
+.library-tune__meta {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--color-accent-4);
+}
+
+.library-tune__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.library-tune__btn {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid var(--color-grid-line);
+  color: var(--color-accent-4);
+  cursor: pointer;
+}
+
+.library-tune__btn:hover {
+  border-color: var(--color-accent-4);
+  box-shadow: 0 0 5px var(--color-accent-4);
+}
+
+.library-tune__btn--delete {
+  color: var(--color-primary);
+}
+
+.library-tune__btn--delete:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 5px var(--color-primary);
+}
+
+/* --------------------------------------------------------------------------
+   Export Modal Styles
+   -------------------------------------------------------------------------- */
+.btn--export {
+  color: var(--color-accent-3);
+  border-color: var(--color-accent-3);
+}
+
+.btn--export:hover {
+  background: var(--color-accent-3);
+  color: var(--color-bg);
+  box-shadow: var(--glow-pink);
+}
+
+.export-info {
+  text-align: center;
+  margin-bottom: var(--space-3);
+  color: var(--color-accent-4);
+}
+
+.export-buttons {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+.btn--large {
+  padding: var(--space-2) var(--space-3);
+  min-width: 120px;
+}
+
+.btn--export-format {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-grid);
+  border: 2px solid var(--color-grid-line);
+  color: var(--color-text);
+}
+
+.btn--export-format:hover {
+  border-color: var(--color-accent-1);
+  box-shadow: 0 0 15px var(--color-accent-1);
+  background: var(--color-grid);
+  color: var(--color-text);
+}
+
+.export-icon {
+  font-family: var(--font-pixel);
+  font-size: 1.2rem;
+  color: var(--color-accent-1);
+}
+
+.export-desc {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  color: var(--color-accent-4);
+}
+
+.export-progress {
+  margin-top: var(--space-3);
+  text-align: center;
+}
+
+.export-progress__bar {
+  height: 8px;
+  background: var(--color-grid);
+  border: 1px solid var(--color-grid-line);
+  margin-bottom: var(--space-1);
+}
+
+.export-progress__fill {
+  height: 100%;
+  background: var(--color-accent-1);
+  width: 0%;
+  transition: width 0.2s;
+}
+
+.export-progress__text {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--color-accent-4);
+}
+
+/* --------------------------------------------------------------------------
+   Mobile Modal Adjustments
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .modal__content {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .modal__title {
+    font-size: 0.75rem;
+  }
+
+  .export-buttons {
+    flex-direction: column;
+  }
+
+  .btn--export-format {
+    width: 100%;
+  }
+
+  .library-tune {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .library-tune__actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
