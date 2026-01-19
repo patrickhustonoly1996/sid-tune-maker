@@ -1,7 +1,7 @@
 {
-  "name": "sid-tune-maker",
+  "name": "diy-retro-banger",
   "version": "0.1.0",
-  "description": "Retro C64-style SID music generator",
+  "description": "DIY Retro Banger - Make 8-bit bangers",
   "type": "module",
   "scripts": {
     "dev": "vite",
