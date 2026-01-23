@@ -10,7 +10,7 @@ function midiToFrequency(midi) {
   return 440 * Math.pow(2, (midi - 69) / 12);
 }
 
-// Note definitions (same as sequencer)
+// Note definitions (same as sequencer - two octaves, proper chromatic scale)
 const NOTES = [
   { name: 'C5', midi: 72 },
   { name: 'B4', midi: 71 },
@@ -26,8 +26,17 @@ const NOTES = [
   { name: 'C#4', midi: 61 },
   { name: 'C4', midi: 60 },
   { name: 'B3', midi: 59 },
+  { name: 'A#3', midi: 58 },
   { name: 'A3', midi: 57 },
+  { name: 'G#3', midi: 56 },
   { name: 'G3', midi: 55 },
+  { name: 'F#3', midi: 54 },
+  { name: 'F3', midi: 53 },
+  { name: 'E3', midi: 52 },
+  { name: 'D#3', midi: 51 },
+  { name: 'D3', midi: 50 },
+  { name: 'C#3', midi: 49 },
+  { name: 'C3', midi: 48 },
 ];
 
 export class AudioExporter {

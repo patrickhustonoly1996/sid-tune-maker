@@ -210,10 +210,11 @@ function setupMobileToolbar() {
     }
   });
 
-  // Undo - clear all (simple undo for now)
+  // Undo - real undo functionality
   document.getElementById('mobile-undo')?.addEventListener('click', () => {
-    if (confirm('Clear all notes?')) {
-      sequencer.clearAll();
+    if (!sequencer.undo()) {
+      // Nothing to undo - optionally show feedback
+      console.log('Nothing to undo');
     }
   });
 }

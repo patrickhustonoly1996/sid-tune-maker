@@ -370,6 +370,7 @@ body::after {
   flex: 1;
   min-height: 0;
   overflow: hidden;
+  position: relative;
 }
 
 /* Piano keys column */
@@ -380,10 +381,19 @@ body::after {
   flex-direction: column;
   background: var(--color-bg);
   border-right: var(--border);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+}
+
+.piano-keys::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .piano-key {
-  flex: 1;
+  height: 20px;
+  min-height: 20px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -406,11 +416,11 @@ body::after {
 /* Grid area */
 .piano-grid {
   flex: 1;
-  display: grid;
+  display: block;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: auto;
   background-color: var(--color-grid);
-  touch-action: pan-x; /* Allow horizontal scroll, prevent other gestures */
+  touch-action: pan-x pan-y; /* Allow both horizontal and vertical scroll */
 }
 
 .grid-row {
@@ -419,6 +429,7 @@ body::after {
 
 .grid-cell {
   width: 24px;
+  height: 20px;
   flex-shrink: 0;
   border-right: 1px solid var(--color-grid-line);
   border-bottom: 1px solid var(--color-grid-line);

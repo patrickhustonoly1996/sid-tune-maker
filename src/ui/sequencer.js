@@ -3,7 +3,7 @@
  * Each voice has its own piano roll with multiple pitch rows
  */
 
-// Note definitions for the piano roll (one octave + a few extra)
+// Note definitions for the piano roll (two octaves, proper chromatic scale)
 const NOTES = [
   { name: 'C5', midi: 72, black: false },
   { name: 'B4', midi: 71, black: false },
@@ -19,8 +19,17 @@ const NOTES = [
   { name: 'C#4', midi: 61, black: true },
   { name: 'C4', midi: 60, black: false },
   { name: 'B3', midi: 59, black: false },
+  { name: 'A#3', midi: 58, black: true },
   { name: 'A3', midi: 57, black: false },
+  { name: 'G#3', midi: 56, black: true },
   { name: 'G3', midi: 55, black: false },
+  { name: 'F#3', midi: 54, black: true },
+  { name: 'F3', midi: 53, black: false },
+  { name: 'E3', midi: 52, black: false },
+  { name: 'D#3', midi: 51, black: true },
+  { name: 'D3', midi: 50, black: false },
+  { name: 'C#3', midi: 49, black: true },
+  { name: 'C3', midi: 48, black: false },
 ];
 
 export class Sequencer {
@@ -77,15 +86,68 @@ export class Sequencer {
     this.selectionStart = null;
     this.clipboard = null; // copied notes
 
+    // Undo history
+    this.undoHistory = [];
+    this.maxUndoHistory = 50;
+
     // Initialize
     this.render();
     this.setupEvents();
     this.setupVoiceControls();
     this.setupKeyboardShortcuts();
+    this.setupScrollSync();
 
     // Connect to transport
     this.transport.onBeat = (beat) => this.onBeat(beat);
     this.transport.onStop = () => this.onStop();
+  }
+
+  /**
+   * Save current grid state to undo history
+   */
+  saveToHistory() {
+    // Deep copy the grid
+    const snapshot = this.grid.map(voice =>
+      voice.map(noteRow =>
+        noteRow.map(cell => cell ? { ...cell } : null)
+      )
+    );
+    this.undoHistory.push(snapshot);
+    // Limit history size
+    if (this.undoHistory.length > this.maxUndoHistory) {
+      this.undoHistory.shift();
+    }
+  }
+
+  /**
+   * Undo the last action
+   */
+  undo() {
+    if (this.undoHistory.length === 0) return false;
+    const previousState = this.undoHistory.pop();
+    this.grid = previousState;
+    this.render();
+    return true;
+  }
+
+  /**
+   * Set up scroll sync between piano keys and grid
+   */
+  setupScrollSync() {
+    this.pianoGridEls.forEach((gridEl, voiceIndex) => {
+      const keysEl = this.pianoKeyEls[voiceIndex];
+      if (!keysEl) return;
+
+      // Sync grid scroll to piano keys
+      gridEl.addEventListener('scroll', () => {
+        keysEl.scrollTop = gridEl.scrollTop;
+      });
+
+      // Sync piano keys scroll to grid
+      keysEl.addEventListener('scroll', () => {
+        gridEl.scrollTop = keysEl.scrollTop;
+      });
+    });
   }
 
   /**
@@ -343,10 +405,12 @@ export class Sequencer {
 
       // Check if clicking on existing note to delete it
       if ((this.grid[voice][noteIndex][col] || this.isNoteContinuation(voice, noteIndex, col)) && !isRecentlyPlaced) {
+        this.saveToHistory();
         this.deleteNoteAt(voice, noteIndex, col);
       } else if (!this.grid[voice][noteIndex][col] && !this.isNoteContinuation(voice, noteIndex, col)) {
         // Ctrl+click or mobile rapid mode = rapid note mode (place short notes)
         // Normal click = draw mode (can extend notes)
+        this.saveToHistory();
         this.isDrawing = true;
         this.isRapidMode = isCtrl;
         this.drawStart = { voice, noteIndex, col };
@@ -482,6 +546,12 @@ export class Sequencer {
     document.addEventListener('keydown', (e) => {
       // Ignore if typing in input
       if (e.target.matches('input, textarea')) return;
+
+      // Ctrl+Z - undo
+      if (e.ctrlKey && e.key === 'z') {
+        e.preventDefault();
+        this.undo();
+      }
 
       // Ctrl+C - copy
       if (e.ctrlKey && e.key === 'c' && this.selection) {
@@ -653,6 +723,7 @@ export class Sequencer {
   pasteClipboard() {
     if (!this.clipboard || !this.selection) return;
 
+    this.saveToHistory();
     const { voice, startNote, startCol } = this.selection;
 
     // Paste notes
@@ -675,6 +746,7 @@ export class Sequencer {
   duplicateSelection() {
     if (!this.selection) return;
 
+    this.saveToHistory();
     const { voice, startNote, endNote, startCol, endCol } = this.selection;
     const width = endCol - startCol + 1;
     const targetCol = endCol + 1;
@@ -713,6 +785,8 @@ export class Sequencer {
     // Check bounds
     if (direction < 0 && startNote <= 0) return;
     if (direction > 0 && endNote >= this.notes.length - 1) return;
+
+    this.saveToHistory();
 
     // Collect active notes with their data
     const activeNotes = [];
@@ -755,6 +829,8 @@ export class Sequencer {
     if (direction < 0 && startCol <= 0) return;
     if (direction > 0 && endCol >= this.cols - 1) return;
 
+    this.saveToHistory();
+
     // Collect active notes with their data
     const activeNotes = [];
     for (let n = startNote; n <= endNote; n++) {
@@ -790,6 +866,7 @@ export class Sequencer {
   deleteSelection() {
     if (!this.selection) return;
 
+    this.saveToHistory();
     const { voice, startNote, endNote, startCol, endCol } = this.selection;
 
     for (let n = startNote; n <= endNote; n++) {
@@ -948,10 +1025,11 @@ export class Sequencer {
    * Clear the entire grid
    */
   clearAll() {
+    this.saveToHistory();
     for (let v = 0; v < this.voices; v++) {
       for (let n = 0; n < this.notes.length; n++) {
         for (let c = 0; c < this.cols; c++) {
-          this.grid[v][n][c] = false;
+          this.grid[v][n][c] = null;
         }
       }
     }
