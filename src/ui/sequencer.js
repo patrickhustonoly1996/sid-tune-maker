@@ -43,8 +43,9 @@ export class Sequencer {
 
     // Grid configuration
     this.voices = 3;
-    this.cols = 64; // 4 bars of 16th notes
+    this.cols = 64; // 4 bars of 16th notes (can be extended by loaded tunes)
     this.notes = NOTES;
+    this.maxCols = 1024; // Support up to 64 bars for long-form pieces
 
     // Grid data: [voice][noteIndex][step] = { length: n } or null
     // length = how many steps the note spans (1 = 16th, 2 = 8th, 4 = quarter, etc)
@@ -1039,9 +1040,19 @@ export class Sequencer {
   /**
    * Load grid data
    * Handles both old format (true/false) and new format ({ length: n })
+   * Automatically expands grid for long-form pieces
    */
   load(data) {
     if (!data) return;
+
+    // Detect grid width from loaded data
+    const loadedCols = data[0]?.[0]?.length || 64;
+
+    // Expand grid columns if needed (up to maxCols)
+    if (loadedCols > this.cols && loadedCols <= this.maxCols) {
+      this.cols = loadedCols;
+      console.log(`[Sequencer] Expanded grid to ${this.cols} columns for long-form piece`);
+    }
 
     // Convert old format to new format if needed
     this.grid = data.map(voice =>

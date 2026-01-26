@@ -32,6 +32,13 @@ const BUILTIN_TUNES = [
     file: '/tunes/hoppy-crossing-original.json',
     category: 'original',
     tags: ['arcade', 'bouncy', 'cheerful']
+  },
+  {
+    id: 'builtin_pokemon_trance_odyssey',
+    name: 'Pokemon Trance Odyssey',
+    file: '/tunes/pokemon-trance-odyssey.json',
+    category: 'easter-egg',
+    tags: ['trance', 'euphoric', 'bicep', 'pokemon', 'epic', 'long-form']
   }
 ];
 

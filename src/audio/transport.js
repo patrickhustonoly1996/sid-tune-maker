@@ -131,7 +131,7 @@ export class Transport {
    * Set loop end (in bars)
    */
   setLoopEnd(bar) {
-    this.loopEnd = Math.max(this.loopStart + 1, Math.min(bar, 64));
+    this.loopEnd = Math.max(this.loopStart + 1, Math.min(bar, 128)); // Extended for long-form
     console.log(`[Transport] Loop end: bar ${this.loopEnd}`);
   }
 
